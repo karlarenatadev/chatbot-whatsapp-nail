@@ -39,7 +39,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 XPATH_CONV_NAO_LIDA = '//span[@aria-label and contains(@aria-label, "mensagen") or @data-testid="icon-unread-count"]/..'
 
 # Alternativa mais robusta — pega qualquer badge numérico na lista
-XPATH_BADGE_GERAL   = '//*[@data-testid="icon-unread-count"]'
+XPATH_BADGE_GERAL = '//span[contains(@aria-label, "não lida") or contains(@aria-label, "unread")]/..'
 
 # Nome/número do remetente no topo da conversa aberta
 XPATH_NOME_CONTATO  = '//header//span[@dir="auto" and @title]'
@@ -74,6 +74,7 @@ def criar_driver() -> webdriver.Chrome:
     Nas próximas, a sessão já estará salva.
     """
     opcoes = Options()
+    opcoes.add_experimental_option("detach", True)
 
     # Perfil persistente — mantém a sessão do WhatsApp Web entre execuções
     opcoes.add_argument(f"--user-data-dir={CHROME_PROFILE_PATH}")
@@ -110,7 +111,7 @@ def aguardar_whatsapp(driver: webdriver.Chrome, timeout: int = 60) -> bool:
     try:
         # Espera a lista de conversas aparecer
         WebDriverWait(driver, timeout).until(
-            EC.presence_of_element_located((By.XPATH, '//div[@data-testid="chat-list"]'))
+            EC.presence_of_element_located((By.XPATH, '//div[@id="pane-side"]'))
         )
         print("[WA] ✅ WhatsApp Web carregado!")
         return True

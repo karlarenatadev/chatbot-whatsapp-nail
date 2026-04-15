@@ -95,14 +95,14 @@ def loop_principal(driver):
                         # 4. Processar com a IA (brain.py)
                         resposta = processar_mensagem(texto, nome)
 
-                        # 5. MODO SILENCIOSO (Apenas simula o envio)
-                        print("\n" + "="*40)
-                        print(f"🤖 O BOT RESPONDERIA PARA {nome}:")
-                        print(resposta)
-                        print("="*40 + "\n")
+                        # 5. ENVIO REAL PARA O WHATSAPP
+                        print(f"[BOT] 🤖 Respondendo para {nome}...")
+                        sucesso = enviar_resposta(driver, resposta)
                         
-                        # Marcamos como sucesso automaticamente para ele não ficar 
-                        # lendo a mesma mensagem em loop eterno
+                        if sucesso:
+                            marcar_respondido(nome, texto)
+                            time.sleep(PAUSA_APOS_RESPONDER) # Evita bloqueios do WhatsApp
+                        
                         sucesso = True 
 
                         if sucesso:
@@ -156,8 +156,8 @@ def main():
         print("\n\n[BOT] 🛑 Bot encerrado pelo usuário. Até logo!")
 
     finally:
-        driver.quit()
-
+        # driver.quit()
+        pass
 
 if __name__ == "__main__":
     main()
